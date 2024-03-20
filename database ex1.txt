@@ -1,0 +1,59 @@
+create database store;
+
+create table countries(
+    code int primary key,
+    name varchar(20) unique not null ,
+    continent_name varchar(20) not null
+);
+
+create table users(
+    id int primary key ,
+    full_name varchar(20) not null ,
+    email varchar(20) unique not null ,
+    gender char(1) not null check ( gender='m'or gender='f'),
+    date_of_birth varchar(15) not null ,
+    created_at datetime not null ,
+    country_code int,
+    foreign key (country_code) references countries(code)
+);
+
+create table orders(
+    id int primary key ,
+    user_id int,
+    foreign key (user_id) references users(id),
+    status varchar(6) check ( status='start' or status='finish' ) ,
+    created_at datetime
+);
+
+create table products(
+    id int primary key ,
+    name varchar(10) not null ,
+    price int default 0,
+    status varchar(10) check ( status='valid' or status='expired'),
+    created_at datetime
+);
+
+create table order_products(
+    order_id int,
+    foreign key (order_id) references orders(id),
+    product_id int,
+    foreign key (product_id) references products(id),
+    quantity int default 0,
+    primary key (order_id,product_id)
+);
+
+insert into countries value (966,'saudi arabia', 'asia');
+insert into countries value (0,'c', 'asia');
+
+insert into users value (2,'khaled','khaled@gmail.com', 'm','2000-01-01', current_timestamp,966 );
+insert into orders value (7,0,'done',current_timestamp);
+insert into products value (42,'product1',522,'valid',current_timestamp);
+insert into order_products value (7,42,3);
+update countries set code=1 , name='country_name', continent_name='europe' where code = 0;
+
+
+select * from countries;
+select * from users;
+select * from orders;
+select * from products;
+select *  from order_products;
